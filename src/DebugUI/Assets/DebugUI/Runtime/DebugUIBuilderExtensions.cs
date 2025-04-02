@@ -12,7 +12,7 @@ namespace DebugUI
             var options = builder.Options.OfType<DebugWindowOptions>().FirstOrDefault();
             if (options == null)
             {
-                options = new DebugWindowOptions();
+                options = DebugWindowOptions.Default.Clone();
                 builder.Options.Add(options);
             }
             configure(options);

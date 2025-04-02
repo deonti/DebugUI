@@ -31,12 +31,10 @@ namespace DebugUI
                 disposables.Clear();
             });
 
-            var windowOptions = Options.OfType<DebugWindowOptions>().FirstOrDefault();
-            if (windowOptions != null)
-            {
-                window.Text = windowOptions.Title;
-                window.SetDraggable(windowOptions.Draggable);
-            }
+            var windowOptions = Options.OfType<DebugWindowOptions>().FirstOrDefault() ?? DebugWindowOptions.Default;
+            window.Text = windowOptions.Title;
+            window.SetDraggable(windowOptions.Draggable);
+            window.SetValueWithoutNotify(windowOptions.Expanded);
 
             return window;
         }
