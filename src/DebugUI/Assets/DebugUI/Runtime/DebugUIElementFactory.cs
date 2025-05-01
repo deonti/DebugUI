@@ -281,6 +281,37 @@ namespace DebugUI
         }
     }
 
+    internal sealed class DebugDropDownFieldFactory : IDebugUIElementFactory
+    {
+        public string Label { get; set; }
+        public Func<int> Getter { get; set; }
+        public Action<int> Setter { get; set; }
+        public List<string> Choices { get; set; }
+
+        public VisualElement CreateVisualElement(ICollection<IDisposable> disposables)
+        {
+            var field = new DropdownField(Label, Choices, defaultIndex: Getter());
+
+            if (Setter == null)
+            {
+                field.SetEnabled(false);
+            }
+            else
+            {
+                field.RegisterValueChangedCallback(x => Setter(Choices.IndexOf(x.newValue)));
+            }
+
+            MinimalRx.EveryValueChanged(this, x => x.Getter())
+                .Subscribe(x =>
+                {
+                    field.index = x;
+                })
+                .AddTo(disposables);
+
+            return field;
+        }
+    }
+
     internal sealed class DebugCompositeFieldFactory<TValue, TCompositeField, TField, TFieldValue> : IDebugUIElementFactory
         where TCompositeField : BaseCompositeField<TValue, TField, TFieldValue>, new()
         where TField : TextValueField<TFieldValue>, new()

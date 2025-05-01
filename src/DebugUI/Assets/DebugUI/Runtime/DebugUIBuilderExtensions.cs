@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -43,6 +44,18 @@ namespace DebugUI
             {
                 Text = text,
                 Action = action
+            });
+            return builder;
+        }
+
+        public static IDebugUIBuilder AddDropDown(this IDebugUIBuilder builder, string label, IEnumerable<string> choices, Func<int> getter, Action<int> setter = null)
+        {
+            builder.Factories.Add(new DebugDropDownFieldFactory
+            {
+                Label = label,
+                Choices = choices.ToList(),
+                Getter = getter,
+                Setter = setter
             });
             return builder;
         }
