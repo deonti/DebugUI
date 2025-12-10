@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.MPE;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -43,8 +44,12 @@ namespace DebugUI.Editor
         }
 
         [InitializeOnLoadMethod]
-        public static void InitializeOnLoadMethod() =>
+        public static void InitializeOnLoadMethod()
+        {
+            if (ProcessService.level is not ProcessLevel.Main) return;
+
             ValidateSettingsAsset();
+        }
 
         [SettingsProvider]
         public static SettingsProvider CreateRootSettingsProvider() =>
